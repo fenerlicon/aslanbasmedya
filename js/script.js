@@ -69,6 +69,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const cards = document.querySelectorAll('.service-card, .testimonial-card');
 
     cards.forEach(card => {
+        card.addEventListener('mouseenter', () => {
+            // Remove transition for transform to prevent lag (Realtime feel)
+            // But keep other transitions if needed, or just set to none for maximum snap
+            card.style.transition = 'none';
+        });
+
         card.addEventListener('mousemove', (e) => {
             const rect = card.getBoundingClientRect();
             const x = e.clientX - rect.left;
@@ -85,7 +91,14 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         card.addEventListener('mouseleave', () => {
+            // Restore smooth transition for the reset
+            card.style.transition = 'transform 0.5s ease';
             card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale3d(1, 1, 1)';
+
+            // Clear inline transition after animation to revert to CSS file rules
+            setTimeout(() => {
+                card.style.transition = '';
+            }, 500);
         });
     });
 });
